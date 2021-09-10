@@ -1,25 +1,60 @@
 package com.kddi.media;
 
+import java.util.ArrayList;
+
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.Player;
 
 public class MediaPlayerBox extends Canvas implements MediaPlayerInterface {
+
+    public static final int RESOURCE_DISPOSED = 0;
+    public static final int PLAY = 1;
+    public static final int STOP = 2;
+    public static final int PAUSE = 3;
+    public static final int RESUME = 4;
+    public static final int FOREGROUND = 5;
+    public static final int BACKGROUND = 6;
+
+    int state = STOP;
+
+    private ArrayList<MediaEventListener> listeners;
+
+    MediaResource resource;
 
     public MediaPlayerBox() {
         super();
     }
 
     public MediaPlayerBox(int flag) {
-        super();
+        this();
     }
 
     public MediaPlayerBox(MediaResource resource, int flag) {
-        super();
+        this();
+        setResource(resource);
     }
 
     @Override
     public void addMediaEventListener(MediaEventListener l) {
+        if (!listeners.contains(l) && listeners != null) {
+            listeners.add(l);
+        }
+    }
 
+    @Override
+    public void removeMediaEventListener(MediaEventListener l) {
+        listeners.remove(l);
+    }
+
+    private void postEvent(int event) {
+        if (listeners != null) {
+            for (MediaEventListener l : listeners
+            ) {
+                l.stateChanged(this, event, 0);
+            }
+        }
     }
 
     @Override
@@ -34,7 +69,7 @@ public class MediaPlayerBox extends Canvas implements MediaPlayerInterface {
 
     @Override
     public MediaResource getResource() {
-        return null;
+        return this.resource;
     }
 
     @Override
@@ -53,22 +88,45 @@ public class MediaPlayerBox extends Canvas implements MediaPlayerInterface {
     }
 
     @Override
-    public void pause() {
-
-    }
-
-    @Override
     public void play() {
-
+        this.play(1);
     }
 
     @Override
     public void play(int count) {
+        if (resource != null) {
+            Player player = resource._getPlayer();
 
+            if (player != null)
+                try {
+                    if (state != PLAY) {
+                        player.setLoopCount(count);
+                        player.start();
+                        state = PLAY;
+                    }
+                } catch (MediaException e) {
+                    e.printStackTrace();
+                }
+        }
     }
 
     @Override
-    public void removeMediaEventListener(MediaEventListener l) {
+    public void stop() {
+        if (resource != null) {
+            Player player = resource._getPlayer();
+
+            if (player != null)
+                try {
+                    player.stop();
+                    state = STOP;
+                } catch (MediaException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+    @Override
+    public void pause() {
 
     }
 
@@ -89,6 +147,9 @@ public class MediaPlayerBox extends Canvas implements MediaPlayerInterface {
 
     @Override
     public void setResource(MediaResource resource) {
+        if (state != STOP) throw new IllegalStateException();
+        if (resource == null) throw new NullPointerException();
+        this.resource = resource;
 
     }
 
@@ -108,13 +169,8 @@ public class MediaPlayerBox extends Canvas implements MediaPlayerInterface {
     }
 
     @Override
-    public void stop() {
-
-    }
-
-    @Override
     public void unsetResource(MediaResource resource) {
-
+        this.resource = null;
     }
 
     @Override
