@@ -198,8 +198,8 @@ public class KeyMapper {
 
 	public static SparseIntArray getDefaultKeyMap() {
 		SparseIntArray map = new SparseIntArray();
-		map.append(KeyEvent.KEYCODE_SOFT_LEFT, KEY_SOFT_LEFT);
-		map.append(KeyEvent.KEYCODE_SOFT_RIGHT, KEY_SOFT_RIGHT);
+		map.append(KeyEvent.KEYCODE_F1, KEY_SOFT_LEFT);
+		map.append(KeyEvent.KEYCODE_F2, KEY_SOFT_RIGHT);
 		map.append(KeyEvent.KEYCODE_BACK, KEY_OPTIONS_MENU);
 		map.append(KeyEvent.KEYCODE_CALL, KEY_SEND);
 		map.append(KeyEvent.KEYCODE_ENDCALL, KEY_END);
@@ -219,7 +219,7 @@ public class KeyMapper {
 		map.append(KeyEvent.KEYCODE_DPAD_DOWN, KEY_DOWN);
 		map.append(KeyEvent.KEYCODE_DPAD_LEFT, KEY_LEFT);
 		map.append(KeyEvent.KEYCODE_DPAD_RIGHT, KEY_RIGHT);
-		map.append(KeyEvent.KEYCODE_ENTER, KEY_FIRE);
+		map.append(KeyEvent.KEYCODE_DPAD_CENTER, KEY_FIRE);
 		map.append(KeyEvent.KEYCODE_DEL, KEY_CLEAR);
 		return map;
 	}
