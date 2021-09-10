@@ -227,6 +227,18 @@ public abstract class Canvas extends Displayable {
 	}
 
 	public void postKeyPressed(int keyCode) {
+		if (keyCode == KEY_SOFT_LEFT) {
+			Command[] commands = this.getCommands();
+			if (getCommands().length > 0) {
+				fireCommandAction(commands[0], this);
+			}
+		}
+		if (keyCode == KEY_SOFT_RIGHT) {
+			Command[] commands = this.getCommands();
+			if (getCommands().length > 1) {
+				fireCommandAction(commands[1], this);
+			}
+		}
 		Display.postEvent(CanvasEvent.getInstance(this, CanvasEvent.KEY_PRESSED, KeyMapper.convertKeyCode(keyCode)));
 	}
 
@@ -938,6 +950,19 @@ public abstract class Canvas extends Displayable {
 
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
 			keyCode = KeyMapper.convertAndroidKeyCode(keyCode, event);
+
+			Command[] commands = getCommands();
+			if (keyCode == KEY_SOFT_LEFT) {
+				if (commands.length > 0) {
+					fireCommandAction(commands[0], null);
+				}
+			}
+			if (keyCode == KEY_SOFT_RIGHT) {
+				if (commands.length > 1) {
+					fireCommandAction(commands[1], null);
+				}
+			}
+
 			if (keyCode == 0) {
 				return false;
 			}

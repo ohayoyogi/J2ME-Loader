@@ -26,7 +26,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.microedition.lcdui.event.CommandActionEvent;
 import javax.microedition.lcdui.event.SimpleEvent;
@@ -43,7 +44,7 @@ public abstract class Displayable {
 
 	protected CommandListener listener;
 
-	private final ArrayList<Command> commands = new ArrayList<>();
+	private final LinkedList<Command> commands = new LinkedList<>();
 
 	private String title;
 	private int tickerMode;
@@ -142,8 +143,17 @@ public abstract class Displayable {
 		if (cmd == null) {
 			throw new NullPointerException();
 		}
+
 		if (!commands.contains(cmd)) {
-			commands.add(cmd);
+			ListIterator<Command> it = commands.listIterator();
+			while(it.hasNext()) {
+				Command c = it.next();
+				if (c.getPriority() > cmd.getPriority()) {
+					it.previous();
+					break;
+				}
+			}
+			it.add(cmd);
 		}
 	}
 
